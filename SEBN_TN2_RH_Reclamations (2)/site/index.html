@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEBN TN2 — Réclamations RH</title>
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-deep:#10205C; --violet-mid:#2C1272; --purple-light:#3C287D;
+  --accent:#6B4FD8; --accent-hover:#5439B8; --accent-soft:#EEEAFB;
+  --ink:#17163B; --ink-soft:#55547A; --line:#E3E1F0; --surface:#fff; --page-bg:#F3F2FA;
+  --ok:#1E8A5F; --ok-soft:#E3F4EC; --danger:#C0392B; --danger-soft:#FBE9E6;
+  --warn:#9A6200; --warn-soft:#FFF1D6; --grey-soft:#EDEDF3;
+  --radius:12px; --radius-sm:8px;
+  --shadow:0 10px 30px -14px rgba(16,32,92,.35);
+  --font-display:'Space Grotesk','Inter',sans-serif; --font-body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:var(--font-body);color:var(--ink);background:var(--page-bg);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,select,input,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.01em}
+.mono{font-variant-numeric:tabular-nums}
+
+/* ---------- Login ---------- */
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.login-art{background:linear-gradient(145deg,var(--navy-deep),var(--violet-mid) 55%,var(--purple-light));color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.login-art::after{content:"";position:absolute;right:-140px;bottom:-140px;width:460px;height:460px;border-radius:50%;border:70px solid rgba(255,255,255,.05)}
+.login-art .brand{display:flex;align-items:center;gap:14px}
+.login-art img{width:56px;height:56px;border-radius:12px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:600}
+.login-art h1{font-size:40px;line-height:1.1;max-width:460px;font-weight:700}
+.login-art p{max-width:420px;opacity:.8}
+.login-form-wrap{display:flex;align-items:center;justify-content:center;padding:32px}
+.login-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:34px;box-shadow:var(--shadow)}
+.login-card h2{font-size:22px;margin-bottom:6px}
+.login-card .sub{color:var(--ink-soft);margin:0 0 22px}
+label.f{display:block;font-weight:600;font-size:13px;margin:0 0 6px}
+.input,select.input,textarea.input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
+.input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(107,79,216,.15)}
+.err{color:var(--danger);font-size:13px;min-height:20px;margin:10px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:var(--radius-sm);border:1px solid transparent;font-weight:600;cursor:pointer;transition:.15s}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover:not(:disabled){background:var(--accent-hover)}
+.btn-ok{background:var(--ok);color:#fff}.btn-ok:hover:not(:disabled){filter:brightness(.92)}
+.btn-danger{background:#fff;color:var(--danger);border-color:var(--danger)}.btn-danger:hover:not(:disabled){background:var(--danger-soft)}
+.btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}.btn-ghost:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.btn-block{width:100%}
+.btn-sm{padding:6px 12px;font-size:13px}
+
+/* ---------- Shell ---------- */
+.topbar{background:linear-gradient(100deg,var(--navy-deep),var(--violet-mid) 60%,var(--purple-light));color:#fff;position:sticky;top:0;z-index:30}
+.topbar-in{max-width:1480px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;gap:28px}
+.tb-brand{display:flex;align-items:center;gap:12px;min-width:0}
+.tb-brand img{width:38px;height:38px;border-radius:9px}
+.tb-brand b{font-family:var(--font-display);font-size:16px;display:block;line-height:1.1}
+.tb-brand span{font-size:11px;opacity:.7;letter-spacing:.08em;text-transform:uppercase}
+.nav{display:flex;gap:4px;height:100%}
+.nav a{display:flex;align-items:center;padding:0 16px;color:rgba(255,255,255,.72);text-decoration:none;font-weight:600;border-bottom:3px solid transparent;margin-top:3px}
+.nav a:hover{color:#fff}.nav a.on{color:#fff;border-bottom-color:#fff}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.clock{font-family:var(--font-display);font-size:15px;text-align:right;line-height:1.15}
+.clock small{display:block;font-family:var(--font-body);font-size:10px;opacity:.65;letter-spacing:.08em;text-transform:uppercase}
+.live{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:.1em;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.12)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3DDC97;box-shadow:0 0 0 0 rgba(61,220,151,.7);animation:pulse 1.8s infinite}
+.live.off .dot{background:#FF6B5E;animation:none}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(61,220,151,0)}100%{box-shadow:0 0 0 0 rgba(61,220,151,0)}}
+.me{display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid rgba(255,255,255,.18)}
+.me .who{text-align:right;line-height:1.15;font-size:12px}.me .who b{display:block;font-size:13px}
+.btn-logout{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.btn-logout:hover{background:#fff;color:var(--navy-deep)}
+.btn-snd{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25);padding:6px 9px;border-radius:8px;cursor:pointer;font-size:12px}
+.main{max-width:1480px;margin:0 auto;padding:24px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.page-head h1{font-size:26px}.page-head p{margin:4px 0 0;color:var(--ink-soft)}
+
+/* ---------- KPI ---------- */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;border-left:4px solid var(--c,var(--accent))}
+.kpi .n{font-family:var(--font-display);font-size:30px;font-weight:700;line-height:1.1}
+.kpi .l{color:var(--ink-soft);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+
+/* ---------- Dashboard grid ---------- */
+.grid>*{min-width:0}
+.grid{display:grid;grid-template-columns:minmax(320px,400px) minmax(0,1fr);gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 1px 0 rgba(16,32,92,.03)}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.card-h h2{font-size:16px;display:flex;align-items:center;gap:10px}
+.card-b{padding:0}
+.feed{max-height:calc(100vh - 290px);min-height:300px;overflow:auto}
+.feed-item{display:block;width:100%;text-align:left;background:#fff;border:0;border-bottom:1px solid var(--line);padding:13px 18px;cursor:pointer;position:relative}
+.feed-item:hover{background:var(--accent-soft)}
+.feed-item .r1{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.feed-item .id{font-family:var(--font-display);font-weight:700;color:var(--navy-deep)}
+.feed-item .ago{font-size:12px;color:var(--ink-soft)}
+.feed-item .cat{font-weight:600;margin:4px 0 2px}
+.feed-item .meta{font-size:12px;color:var(--ink-soft);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.feed-item.fresh{animation:fresh 2.6s ease-out}
+@keyframes fresh{0%{background:#D9D0FA;transform:translateX(-14px);opacity:.2}12%{transform:none;opacity:1}100%{background:#fff}}
+.feed-item.isnew::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.empty{padding:36px;text-align:center;color:var(--ink-soft)}
+
+/* ---------- Table ---------- */
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 18px;border-bottom:1px solid var(--line)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink-soft)}
+.chip.on{background:var(--navy-deep);border-color:var(--navy-deep);color:#fff}
+.tools .input{max-width:240px;padding:7px 10px}
+.tbl-wrap{overflow:auto}
+table{border-collapse:collapse;width:100%}
+th{position:sticky;top:0;background:#F8F7FD;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--accent-soft)}
+tr.fresh td{animation:fresh 2.6s ease-out}
+td.id{font-family:var(--font-display);font-weight:700;color:var(--navy-deep);white-space:nowrap}
+td.nowrap{white-space:nowrap}
+td .sub{color:var(--ink-soft);font-size:12px}
+.desc-cell{max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- Badges ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-Nouvelle{background:var(--accent-soft);color:var(--accent-hover)}
+.b-En-cours{background:var(--warn-soft);color:var(--warn)}
+.b-Clôturée{background:var(--ok-soft);color:var(--ok)}
+.b-Rejetée{background:var(--danger-soft);color:var(--danger)}
+.b-Historique{background:var(--grey-soft);color:var(--ink-soft)}
+.pr{display:inline-block;padding:2px 9px;border-radius:6px;font-size:12px;font-weight:700;border:1px solid var(--line)}
+.p-Haute{background:var(--danger-soft);color:var(--danger);border-color:#F1C7C1}
+.p-Normale{background:#E8ECF8;color:var(--navy-deep);border-color:#CFD7F0}
+.p-Basse{background:var(--grey-soft);color:var(--ink-soft)}
+.none{color:#A5A4BD}
+
+/* ---------- Drawer ---------- */
+.still{animation:none!important}
+.overlay{position:fixed;inset:0;background:rgba(16,32,92,.38);z-index:40;animation:fade .15s}
+@keyframes fade{from{opacity:0}}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--surface);z-index:41;display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(16,32,92,.5);animation:slide .2s ease-out}
+@keyframes slide{from{transform:translateX(40px);opacity:0}}
+.dr-h{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start;background:linear-gradient(100deg,#F8F7FD,#fff)}
+.dr-h h2{font-size:22px;color:var(--navy-deep)}
+.dr-h .badges{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.x{border:0;background:var(--grey-soft);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1}
+.dr-b{padding:20px 24px;overflow:auto;flex:1}
+.sec{margin-bottom:22px}
+.sec h3{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.kv div span{display:block;font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.kv div b{font-weight:600}
+.kv .wide{grid-column:1/-1}
+.descbox{background:#F8F7FD;border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;white-space:pre-wrap;word-break:break-word}
+.actions{background:#F8F7FD;border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.actions .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.actions .btns{display:flex;gap:10px;flex-wrap:wrap}
+.note{font-size:12px;color:var(--ink-soft);margin:8px 0 0}
+.result{border-left:4px solid var(--c);padding:12px 14px;background:#fff;border-radius:6px;border:1px solid var(--line);border-left-width:4px}
+.tl{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--line)}
+.tl li{position:relative;padding:0 0 14px 14px}
+.tl li::before{content:"";position:absolute;left:-25px;top:4px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--accent)}
+.tl li.k-ok::before{border-color:var(--ok)}.tl li.k-no::before{border-color:var(--danger)}.tl li.k-wip::before{border-color:#D69A1B}
+.tl .t{font-family:var(--font-display);font-size:13px;font-weight:600}
+.tl .d{color:var(--ink-soft);font-size:13px}
+.tl .c{margin-top:4px;font-size:13px;background:#F8F7FD;border-radius:6px;padding:8px 10px;white-space:pre-wrap;word-break:break-word}
+.durs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.durs div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.durs span{display:block;font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.durs b{font-family:var(--font-display);font-size:16px}
+
+/* ---------- Treat page ---------- */
+.treat{max-width:880px;margin:0 auto}
+.treat .card-b{padding:24px}
+.back{background:none;border:0;color:var(--accent);font-weight:600;cursor:pointer;padding:0;margin-bottom:14px}
+.counter{font-size:12px;color:var(--ink-soft);text-align:right;margin-top:4px}
+.treat-head{padding:20px 24px;color:#fff;border-radius:var(--radius) var(--radius) 0 0}
+.treat-head.close{background:linear-gradient(100deg,#176E4C,var(--ok))}
+.treat-head.reject{background:linear-gradient(100deg,#9C2D21,var(--danger))}
+.treat-head h1{font-size:22px}.treat-head p{margin:4px 0 0;opacity:.85}
+
+/* ---------- History ---------- */
+.filters{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line);align-items:center}
+.filters .input{width:auto;min-width:130px;padding:8px 10px}
+.filters .grow{flex:1;min-width:220px}
+.pager{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:10px;flex-wrap:wrap;color:var(--ink-soft)}
+.progress{height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+.banner{background:var(--warn-soft);color:var(--warn);padding:10px 18px;border-bottom:1px solid #F0D9A5;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--navy-deep);color:#fff;padding:12px 20px;border-radius:10px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw}
+.toast.show{opacity:1;transform:translate(-50%,0)}.toast.bad{background:var(--danger)}
+
+@media(max-width:1100px){.grid{grid-template-columns:minmax(0,1fr)}.feed{max-height:420px}.kpis{grid-template-columns:repeat(2,1fr)}.login{grid-template-columns:1fr}.login-art{display:none}.clock,.me .who{display:none}.tb-brand span{display:none}}
+@media(max-width:760px){.topbar-in{flex-wrap:wrap;height:auto;padding:8px 12px;gap:6px 10px}.nav{order:3;width:100%;height:42px;overflow-x:auto;margin:0 -4px}.nav a{padding:0 12px;white-space:nowrap}.tb-right{gap:8px}.btn-snd{display:none}.me{padding-left:8px}}
+@media(max-width:640px){.topbar-in{padding:8px 12px}.tools .input{max-width:none;width:100%}.page-head h1{font-size:22px}.main{padding:14px}.kv{grid-template-columns:1fr}.actions .row,.durs{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section class="login hidden" id="view-login">
+  <div class="login-art">
+    <div class="brand"><img src="assets/logo.png" alt="SEBN TN2"><div><div class="eyebrow">SEBN TN2</div><b style="font-family:var(--font-display);font-size:18px">Ressources Humaines</b></div></div>
+    <div>
+      <h1>Gestion et suivi des réclamations</h1>
+      <p>De la soumission à la clôture : chaque réclamation reçoit un identifiant, et chaque action est horodatée et conservée.</p>
+    </div>
+    <div class="eyebrow">Usage interne — accès réservé aux agents RH habilités</div>
+  </div>
+  <div class="login-form-wrap">
+    <form class="login-card" id="login-form" autocomplete="off">
+      <h2>Connexion</h2>
+      <p class="sub">Saisissez votre matricule pour accéder à l'application.</p>
+      <label class="f" for="matricule">Matricule</label>
+      <input class="input" id="matricule" inputmode="numeric" maxlength="10" placeholder="ex. 01756" required autofocus>
+      <p class="err" id="login-err" role="alert"></p>
+      <button class="btn btn-primary btn-block" id="login-btn" type="submit">Accéder</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div class="hidden" id="view-app">
+  <header class="topbar"><div class="topbar-in">
+    <div class="tb-brand"><img src="assets/logo.png" alt="SEBN TN2"><div><b>Réclamations RH</b><span>SEBN TN2</span></div></div>
+    <nav class="nav">
+      <a href="#/" data-nav="dash">Tableau de bord</a>
+      <a href="#/historique" data-nav="hist">Historique</a>
+      <a href="#/journal" data-nav="jour">Journal d'activité</a>
+    </nav>
+    <div class="tb-right">
+      <button class="btn-snd" id="snd" title="Son à l'arrivée d'une réclamation">Son : activé</button>
+      <div class="live" id="live"><span class="dot"></span><span id="live-t">EN DIRECT</span></div>
+      <div class="clock mono"><span id="clock">--:--:--</span><small>Heure de Tunis</small></div>
+      <div class="me">
+        <div class="who"><b id="me-n">—</b><span id="me-m">—</span></div>
+        <button class="btn btn-sm btn-logout" id="logout">Déconnexion</button>
+      </div>
+    </div>
+  </div></header>
+  <main class="main" id="main"></main>
+</div>
+
+<div id="drawer-root"></div>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+"use strict";
+const CFG = window.APP_CONFIG || {};
+const TZ_OFFSET = "+01:00";               // Tunisie (pas de changement d'heure)
+const STATUTS = ["Nouvelle","En cours","Clôturée","Rejetée"];
+const PRIOS = ["Basse","Normale","Haute"];
+const KEYS = {"ID":"id","Date de soumission":"sub","Matricule":"mat","Département":"dep","Type":"type","Shift":"shift","Area":"area","Sub Area":"subarea","Qualification":"qual","Zone de problème":"zone","Catégorie":"cat","Sous-catégorie":"scat","Date et heure incident":"inc","Description":"desc","Statut":"st","Priorité":"prio","Agent responsable":"agent","Prise en charge le":"taken","Clôture / rejet le":"closed","Clôture / rejet par":"closedBy","Traitement / motif":"text","Dernière modification":"mod","Ligne source":"srow","Enregistrée dans le système le":"ingested"};
+
+const S = { token:null, me:null, agents:[], seq:-1, items:[], stats:null, offset:0, seen:null, connected:true,
+            filter:"Toutes", q:"", sound:true, drawerId:null, timer:null, histData:null, jourData:null, dirty:false };
+
+/* ---------- utils ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = v => String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = o => { const r={}; for(const k in o) r[KEYS[k]||k]=o[k]; return r; };
+const nowMs = () => Date.now()+S.offset;
+const tms = s => s ? Date.parse(String(s).replace(" ","T")+TZ_OFFSET) : NaN;
+function fdt(s){ if(!s) return "—"; const m=/^(\d{4})-(\d\d)-(\d\d)[ T](\d\d:\d\d(?::\d\d)?)/.exec(s); return m? `${m[3]}/${m[2]}/${m[1]} ${m[4]}` : esc(s); }
+function dur(ms){ if(!(ms>=0)) return "—"; let s=Math.round(ms/1000); const d=Math.floor(s/86400); s%=86400; const h=Math.floor(s/3600); s%=3600; const m=Math.floor(s/60); s%=60;
+  return d? `${d} j ${h} h ${m} min` : h? `${h} h ${m} min` : m? `${m} min ${s} s` : `${s} s`; }
+function ago(s){ const t=tms(s); if(isNaN(t)) return ""; const d=nowMs()-t; if(d<0) return "à l'instant"; if(d<60000) return `il y a ${Math.max(1,Math.round(d/1000))} s`;
+  if(d<3600000) return `il y a ${Math.floor(d/60000)} min`; if(d<86400000) return `il y a ${Math.floor(d/3600000)} h`; return `il y a ${Math.floor(d/86400000)} j`; }
+const cls = s => String(s).replace(/ /g,"-");
+const badge = s => `<span class="badge b-${cls(s)}">${esc(s)}</span>`;
+const prio = p => p? `<span class="pr p-${esc(p)}">${esc(p)}</span>` : `<span class="none">—</span>`;
+function toast(msg,bad){ const t=$("#toast"); t.textContent=msg; t.className="toast show"+(bad?" bad":""); clearTimeout(toast.t); toast.t=setTimeout(()=>t.className="toast",bad?4500:2800); }
+const device = () => (navigator.userAgent||"").slice(0,120);
+
+/* ---------- API ---------- */
+async function api(action,payload={},opts={}){
+  const body = JSON.stringify(Object.assign({action,token:S.token,device:device()},payload));
+  let res;
+  try{
+    const r = await fetch(CFG.API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body});
+    res = await r.json();
+  }catch(e){ throw {network:true,error:"Connexion impossible. Réessayez."}; }
+  if(res.nowMs) S.offset = res.nowMs-Date.now();
+  if(!res.ok){
+    if(res.code==="SESSION" && !opts.noKick){ kick("Session expirée. Veuillez vous reconnecter."); }
+    throw res;
+  }
+  return res;
+}
+const track = (action,detail,id) => { if(S.token) api("log",{events:[{action,detail,id}]}).catch(()=>{}); };
+
+/* ---------- session ---------- */
+function saveSession(){ try{ sessionStorage.setItem("sebn_rh", JSON.stringify({token:S.token,me:S.me,agents:S.agents})); }catch(e){} }
+function loadSession(){ try{ const j=JSON.parse(sessionStorage.getItem("sebn_rh")||"null"); if(j&&j.token){ S.token=j.token; S.me=j.me; S.agents=j.agents||[]; return true; } }catch(e){} return false; }
+function clearSession(){ try{ sessionStorage.removeItem("sebn_rh"); }catch(e){} S.token=null; S.me=null; }
+function kick(msg){ stopPoll(); clearSession(); closeDrawer(true); showLogin(msg); }
+
+function showLogin(msg){
+  $("#view-app").classList.add("hidden"); $("#view-login").classList.remove("hidden");
+  $("#login-err").textContent = msg||""; $("#matricule").value=""; setTimeout(()=>$("#matricule").focus(),50);
+  document.title="SEBN TN2 — Réclamations RH";
+}
+$("#login-form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const btn=$("#login-btn"), err=$("#login-err"); err.textContent=""; btn.disabled=true; btn.textContent="Vérification…";
+  try{
+    const r = await api("login",{matricule:$("#matricule").value.trim()},{noKick:true});
+    S.token=r.token; S.me=r.matricule; S.agents=r.agents; S.seq=-1; S.seen=null; saveSession(); enterApp();
+  }catch(x){ err.textContent = x.error||"Erreur de connexion."; }
+  finally{ btn.disabled=false; btn.textContent="Accéder"; }
+});
+$("#logout").addEventListener("click", async ()=>{
+  const t=S.token; stopPoll(); closeDrawer(true);
+  try{ await api("logout",{},{noKick:true}); }catch(e){}
+  clearSession(); showLogin(""); history.replaceState(null,"","#/");
+});
+$("#snd").addEventListener("click",()=>{ S.sound=!S.sound; $("#snd").textContent="Son : "+(S.sound?"activé":"coupé"); if(S.sound) beep(); });
+
+function enterApp(){
+  $("#view-login").classList.add("hidden"); $("#view-app").classList.remove("hidden");
+  $("#me-m").textContent = "Matricule "+S.me; const ma=S.agents.find(a=>a.matricule===S.me); $("#me-n").textContent = ma?ma.name:"Agent RH"; S.histData=null; S.jourData=null;
+  route(); startPoll();
+}
+
+/* ---------- live polling ---------- */
+function startPoll(){ stopPoll(); poll(); }
+function stopPoll(){ clearTimeout(S.timer); S.timer=null; }
+async function poll(){
+  clearTimeout(S.timer);
+  if(!S.token) return;
+  if(!document.hidden){
+    try{
+      const r = await api("poll",{seq:S.seq});
+      setLive(true);
+      if(r.changed){ S.dirty = S.seq!==-1; applyData(r); }
+    }catch(e){ if(e.network||!e.code) setLive(false); }
+  }
+  S.timer = setTimeout(poll, CFG.POLL_MS||4000);
+}
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && S.token) poll(); });
+function setLive(ok){ S.connected=ok; const l=$("#live"); l.classList.toggle("off",!ok); $("#live-t").textContent = ok?"EN DIRECT":"CONNEXION PERDUE"; }
+
+function applyData(r){
+  const items = r.items.map(norm);
+  const firstLoad = S.seen===null;
+  const fresh = [];
+  if(firstLoad){ S.seen=new Set(items.map(i=>i.id)); }
+  else items.forEach(i=>{ if(!S.seen.has(i.id)){ S.seen.add(i.id); if(i.st==="Nouvelle") fresh.push(i.id); } });
+  const prev = Object.fromEntries(S.items.map(i=>[i.id,i]));
+  S.items=items; S.stats=r.stats; S.seq=r.seq; S.freshIds=new Set(fresh); if(r.agents) S.agents=r.agents;
+  const n = r.stats.Nouvelle; document.title = (n? `(${n}) `:"")+"SEBN TN2 — Réclamations RH";
+  if(fresh.length){ toast(fresh.length===1? `Nouvelle réclamation ${fresh[0]}` : `${fresh.length} nouvelles réclamations`); if(S.sound) beep(); }
+  if(curRoute().name==="dash") renderDash(); else if(curRoute().name==="hist"||curRoute().name==="jour") showStale();
+  // fiche ouverte modifiée par quelqu'un d'autre ?
+  if(S.drawerId && S.drawerData){ const cur=items.find(i=>i.id===S.drawerId);
+    if(cur && cur.mod!==S.drawerData.mod && !S.drawerBusy){ openDrawer(S.drawerId,true); toast("Cette réclamation vient d'être mise à jour."); } }
+}
+function beep(){ try{ const c=new (window.AudioContext||window.webkitAudioContext)(), o=c.createOscillator(), g=c.createGain();
+  o.type="sine"; o.frequency.value=880; g.gain.setValueAtTime(.0001,c.currentTime); g.gain.exponentialRampToValueAtTime(.18,c.currentTime+.02); g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.4);
+  o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+.42); }catch(e){} }
+
+setInterval(()=>{ if(!S.token) return; const d=new Date(nowMs()); $("#clock").textContent = new Intl.DateTimeFormat("fr-FR",{timeZone:"Africa/Tunis",hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(d);
+  document.querySelectorAll("[data-ago]").forEach(el=>el.textContent=ago(el.dataset.ago)); },1000);
+
+/* ---------- routing ---------- */
+function curRoute(){ const h=location.hash.replace(/^#\/?/,""); const p=h.split("/");
+  if(p[0]==="historique") return {name:"hist"}; if(p[0]==="journal") return {name:"jour"};
+  if((p[0]==="cloture"||p[0]==="rejet") && /^REC-\d{6}$/.test(p[1]||"")) return {name:p[0],id:p[1]};
+  return {name:"dash"}; }
+window.addEventListener("hashchange",()=>{ if(S.token) route(); });
+function route(){
+  const r=curRoute(); closeDrawer(true);
+  document.querySelectorAll("[data-nav]").forEach(a=>a.classList.toggle("on", a.dataset.nav===r.name || (a.dataset.nav==="dash"&&(r.name==="cloture"||r.name==="rejet"))));
+  window.scrollTo(0,0);
+  if(r.name==="dash"){ track("PAGE_TABLEAU_DE_BORD","Page Tableau de bord affichée"); renderDash(); }
+  else if(r.name==="hist"){ track("PAGE_HISTORIQUE","Page Historique affichée"); renderHist(); }
+  else if(r.name==="jour"){ track("PAGE_JOURNAL","Page Journal d'activité affichée"); renderJour(); }
+  else renderTreat(r);
+}
+
+/* ---------- dashboard ---------- */
+function renderDash(){
+  const m=$("#main"); const st=S.stats||{};
+  if(!$("#dash-root")){
+    m.innerHTML = `<div id="dash-root">
+      <div class="page-head"><div><h1>Tableau de bord</h1><p>Réclamations reçues en temps réel — cliquez sur une réclamation pour l'ouvrir.</p></div></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="grid">
+        <section class="card"><div class="card-h"><h2><span class="live" style="background:var(--ok-soft);color:var(--ok)"><span class="dot" style="background:var(--ok)"></span>EN DIRECT</span>Flux d'arrivée</h2></div><div class="feed" id="feed"></div></section>
+        <section class="card"><div class="card-h"><h2>Dernières réclamations</h2><a href="#/historique" class="btn btn-ghost btn-sm" style="text-decoration:none">Tout l'historique</a></div>
+          <div class="tools"><div class="chips" id="chips"></div><input class="input" id="q" placeholder="Rechercher ID, matricule…" value="${esc(S.q)}"></div>
+          <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>Reçue le</th><th>Matricule</th><th>Département</th><th>Catégorie</th><th>Statut</th><th>Priorité</th><th>Agent</th></tr></thead><tbody id="tb"></tbody></table></div></section>
+      </div></div>`;
+    $("#q").addEventListener("input",e=>{ S.q=e.target.value; fillTable(); });
+    $("#chips").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; S.filter=c.dataset.f; track("FILTRE","Filtre statut : "+S.filter); fillChips(); fillTable(); });
+    $("#feed").addEventListener("click",e=>{ const b=e.target.closest("[data-id]"); if(b) openDrawer(b.dataset.id); });
+    $("#tb").addEventListener("click",e=>{ const b=e.target.closest("[data-id]"); if(b) openDrawer(b.dataset.id); });
+  }
+  const kp=[["Nouvelles",st.Nouvelle,"var(--accent)"],["En cours",st["En cours"],"#D69A1B"],["Clôturées",st["Clôturée"],"var(--ok)"],["Rejetées",st["Rejetée"],"var(--danger)"],["Total",st.total,"var(--navy-deep)"]];
+  $("#kpis").innerHTML = kp.map(k=>`<div class="kpi" style="--c:${k[2]}"><div class="n mono">${S.stats? k[1]:"…"}</div><div class="l">${k[0]}</div></div>`).join("");
+  fillChips(); fillFeed(); fillTable();
+}
+function fillChips(){ $("#chips").innerHTML = ["Toutes",...STATUTS].map(f=>`<button class="chip ${S.filter===f?"on":""}" data-f="${f}">${f}</button>`).join(""); }
+function fillFeed(){
+  const f=$("#feed"); if(!S.stats){ f.innerHTML=`<div class="empty">Chargement…</div>`; return; }
+  const list=S.items.slice().sort((a,b)=>b.id.localeCompare(a.id)).slice(0,25);
+  if(!list.length){ f.innerHTML=`<div class="empty">Aucune réclamation pour le moment.<br>Les nouvelles apparaîtront ici automatiquement.</div>`; return; }
+  f.innerHTML = list.map(i=>`<button class="feed-item ${i.st==="Nouvelle"?"isnew":""} ${S.freshIds&&S.freshIds.has(i.id)?"fresh":""}" data-id="${i.id}">
+    <div class="r1"><span class="id">${i.id}</span><span class="ago" data-ago="${esc(i.sub)}">${ago(i.sub)}</span></div>
+    <div class="cat">${esc(i.cat)} — ${esc(i.scat)}</div>
+    <div class="meta">${badge(i.st)} ${i.prio?prio(i.prio):""}<span>Matricule ${esc(i.mat)} · ${esc(i.dep)} · ${esc(i.shift)}</span></div></button>`).join("");
+}
+function fillTable(){
+  const q=S.q.trim().toLowerCase();
+  let list=S.items.slice().sort((a,b)=>b.id.localeCompare(a.id));
+  if(S.filter!=="Toutes") list=list.filter(i=>i.st===S.filter);
+  if(q) list=list.filter(i=>(i.id+" "+i.mat+" "+i.dep+" "+i.cat+" "+i.scat+" "+i.agent).toLowerCase().includes(q));
+  list=list.slice(0,40);
+  $("#tb").innerHTML = list.length? list.map(i=>`<tr data-id="${i.id}" class="${S.freshIds&&S.freshIds.has(i.id)?"fresh":""}"><td class="id">${i.id}</td><td class="nowrap mono">${fdt(i.sub)}</td><td class="mono">${esc(i.mat)}</td><td>${esc(i.dep)}</td>
+    <td>${esc(i.cat)}<div class="sub">${esc(i.scat)}</div></td><td>${badge(i.st)}</td><td>${prio(i.prio)}</td><td class="mono">${i.agent?esc(i.agent):'<span class="none">—</span>'}</td></tr>`).join("")
+    : `<tr><td colspan="8" class="empty">Aucune réclamation ne correspond.</td></tr>`;
+}
+
+/* ---------- detail drawer ---------- */
+function closeDrawer(silent){ $("#drawer-root").innerHTML=""; S.drawerId=null; S.drawerData=null; S.drawerRendered=null; S.drawerBusy=false; document.body.style.overflow=""; }
+async function openDrawer(id,refresh){
+  S.drawerId=id; document.body.style.overflow="hidden";
+  const root=$("#drawer-root");
+  if(!refresh){ root.innerHTML=`<div class="overlay" id="ov"></div><aside class="drawer"><div class="dr-b"><div class="empty">Ouverture de ${esc(id)}…</div></div></aside>`; $("#ov").addEventListener("click",()=>closeDrawer()); }
+  try{
+    const r=await api("detail",{id});
+    if(S.drawerId!==id) return;
+    S.drawerData=norm(r.dossier); S.drawerEvents=r.events; renderDrawer();
+  }catch(e){ if(e.code==="SESSION") return; closeDrawer(); toast(e.error||"Impossible d'ouvrir la réclamation.",true); }
+}
+function kvs(pairs){ return `<div class="kv">${pairs.map(p=>`<div class="${p[2]||""}"><span>${p[0]}</span><b>${p[1]===""||p[1]==null?'<span class="none">—</span>':esc(p[1])}</b></div>`).join("")}</div>`; }
+function renderDrawer(){
+  const d=S.drawerData, ev=S.drawerEvents||[], root=$("#drawer-root");
+  const tSub=tms(d.sub), tTake=tms(d.taken), tEnd=tms(d.closed);
+  let actions="";
+  if(d.st==="Nouvelle"){
+    actions=`<div class="sec"><h3>Prise en charge</h3><div class="actions">
+      <div class="row"><div><label class="f" for="agSel">Agent RH qui ouvre la réclamation</label>
+        <select class="input" id="agSel"><option value="" disabled selected>Sélectionner…</option>${S.agents.map(a=>`<option value="${esc(a.matricule)}">${esc(a.matricule)}${a.name&&a.name!==a.matricule?" — "+esc(a.name):""}</option>`).join("")}</select></div>
+        <div><label class="f" for="prSel">Priorité</label><select class="input" id="prSel"><option value="" disabled selected>Sélectionner…</option>${PRIOS.map(p=>`<option>${p}</option>`).join("")}</select></div></div>
+      <div class="btns"><button class="btn btn-primary" id="takeBtn" disabled>Ouvrir la réclamation (statut « En cours »)</button></div>
+      <p class="note">Le statut passe à « En cours » avec l'heure exacte, l'agent et la priorité enregistrés.</p></div></div>`;
+  }else if(d.st==="En cours"){
+    actions=`<div class="sec"><h3>Traitement</h3><div class="actions">
+      <div class="row"><div><label class="f">Agent responsable</label><b class="mono">${esc(d.agent)}</b><div class="note">Prise en charge le ${fdt(d.taken)}</div></div>
+        <div><label class="f" for="prSel">Priorité</label><select class="input" id="prSel">${PRIOS.map(p=>`<option ${p===d.prio?"selected":""}>${p}</option>`).join("")}</select></div></div>
+      <div class="btns"><button class="btn btn-ok" id="closeBtn">Clôturer</button><button class="btn btn-danger" id="rejectBtn">Rejeter</button></div></div></div>`;
+  }else if(d.st==="Clôturée"||d.st==="Rejetée"){
+    const ok=d.st==="Clôturée";
+    actions=`<div class="sec"><h3>${ok?"Clôture":"Rejet"}</h3><div class="result" style="--c:${ok?"var(--ok)":"var(--danger)"}">
+      <div class="note" style="margin:0 0 6px">${ok?"Clôturée":"Rejetée"} par <b>${esc(d.closedBy)}</b> le ${fdt(d.closed)} · agent responsable ${esc(d.agent)}</div>
+      <div style="white-space:pre-wrap;word-break:break-word"><b>${ok?"Traitement :":"Motif :"}</b> ${esc(d.text)}</div></div></div>`;
+  }else{
+    actions=`<div class="sec"><div class="note">Réclamation antérieure à la mise en service du système : consultation uniquement.</div></div>`;
+  }
+  const durs=`<div class="durs"><div><span>Attente avant prise en charge</span><b>${tTake?dur(tTake-tSub):(d.st==="Nouvelle"?dur(nowMs()-tSub)+" (en cours d'attente)":"—")}</b></div>
+    <div><span>Durée de traitement</span><b>${tEnd&&tTake?dur(tEnd-tTake):"—"}</b></div><div><span>Durée totale</span><b>${tEnd?dur(tEnd-tSub):"—"}</b></div></div>`;
+  const tl=ev.map(e=>`<li class="${e.action==="CLOTURE"?"k-ok":e.action==="REJET"?"k-no":e.action==="STATUT_CHANGE"?"k-wip":""}"><div class="t mono">${fdt(e.t)}</div>
+    <div class="d"><b>${esc(label(e.action))}</b> — ${esc(e.detail)}${e.neu&&e.action!=="CLOTURE"&&e.action!=="REJET"?` → <b>${esc(e.neu)}</b>`:""} · ${esc(e.agent||"")}</div>${e.comment?`<div class="c">${esc(e.comment)}</div>`:""}</li>`).join("");
+  const wasOpen=!!root.querySelector(".drawer"); const keep=wasOpen; S.drawerRendered=d.id;
+  root.innerHTML=`<div class="overlay ${keep?"still":""}" id="ov"></div><aside class="drawer ${keep?"still":""}" role="dialog" aria-label="Réclamation ${esc(d.id)}">
+    <div class="dr-h"><div><div class="eyebrow" style="color:var(--ink-soft)">Réclamation</div><h2>${esc(d.id)}</h2><div class="badges">${badge(d.st)} ${d.prio?prio(d.prio):""}</div></div><button class="x" id="dx" aria-label="Fermer">×</button></div>
+    <div class="dr-b">
+      <div class="sec"><h3>Employé</h3>${kvs([["Matricule",d.mat],["Département",d.dep],["Type",d.type],["Shift",d.shift],["Area",d.area],["Sub Area",d.subarea],["Qualification",d.qual,"wide"]])}</div>
+      <div class="sec"><h3>Réclamation</h3>${kvs([["Zone de problème",d.zone],["Catégorie",d.cat],["Sous-catégorie",d.scat],["Date et heure de l'incident",fdt(d.inc)],["Soumise le",fdt(d.sub)],["Enregistrée dans le système le",fdt(d.ingested)]])}
+        <div style="margin-top:12px"><span style="font-size:11px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;font-weight:600">Description</span><div class="descbox">${d.desc?esc(d.desc):'<span class="none">Aucune description fournie.</span>'}</div></div></div>
+      ${actions}
+      <div class="sec"><h3>Chronologie</h3>${durs}<ul class="tl"><li><div class="t mono">${fdt(d.sub)}</div><div class="d"><b>Soumission</b> — réclamation envoyée via le formulaire par le matricule ${esc(d.mat)}</div></li>${tl}</ul></div>
+    </div></aside>`;
+  $("#ov").addEventListener("click",()=>closeDrawer()); $("#dx").addEventListener("click",()=>closeDrawer());
+  const ag=$("#agSel"), pr=$("#prSel");
+  if(d.st==="Nouvelle"){
+    const chk=()=>{ $("#takeBtn").disabled=!(ag.value&&pr.value); }; ag.onchange=pr.onchange=chk;
+    $("#takeBtn").onclick=async ()=>{ const b=$("#takeBtn"); b.disabled=true; b.textContent="Enregistrement…"; S.drawerBusy=true;
+      try{ const r=await api("take",{id:d.id,agent:ag.value,priority:pr.value}); S.seq=-1; toast(`${d.id} est maintenant « En cours ».`); S.drawerBusy=false; await openDrawer(d.id,true); poll(); }
+      catch(e){ S.drawerBusy=false; toast(e.error||"Échec.",true); if(e.code==="CONFLICT"){ openDrawer(d.id,true); poll(); } else { b.disabled=false; b.textContent="Ouvrir la réclamation (statut « En cours »)"; } } };
+  }else if(d.st==="En cours"){
+    pr.onchange=async ()=>{ try{ S.drawerBusy=true; await api("priority",{id:d.id,priority:pr.value}); S.seq=-1; toast("Priorité mise à jour."); S.drawerBusy=false; await openDrawer(d.id,true); poll(); }catch(e){ S.drawerBusy=false; toast(e.error||"Échec.",true); } };
+    $("#closeBtn").onclick=()=>{ location.hash=`#/cloture/${d.id}`; };
+    $("#rejectBtn").onclick=()=>{ location.hash=`#/rejet/${d.id}`; };
+  }
+}
+const LABELS={RECEPTION:"Réception",AGENT_ASSIGNE:"Agent assigné",PRIORITE_DEFINIE:"Priorité définie",PRIORITE_MODIFIEE:"Priorité modifiée",STATUT_CHANGE:"Changement de statut",CLOTURE:"Clôture",REJET:"Rejet",OUVERTURE_DETAIL:"Consultation",CONNEXION:"Connexion",DECONNEXION:"Déconnexion",CONNEXION_REFUSEE:"Connexion refusée",IMPORT_INITIAL:"Import initial",
+  PAGE_TABLEAU_DE_BORD:"Page Tableau de bord",PAGE_HISTORIQUE:"Page Historique",PAGE_JOURNAL:"Page Journal",OUVERTURE_PAGE_CLOTURE:"Ouverture page de clôture",OUVERTURE_PAGE_REJET:"Ouverture page de rejet",ANNULATION:"Annulation",EXPORT_HISTORIQUE:"Export Historique",EXPORT_JOURNAL:"Export Journal",FILTRE:"Filtre",CLIC:"Clic"};
+const label=a=>LABELS[a]||a;
+
+/* ---------- close / reject page ---------- */
+async function renderTreat(r){
+  const isClose=r.name==="cloture", m=$("#main");
+  m.innerHTML=`<div class="treat"><div class="empty">Chargement…</div></div>`;
+  track(isClose?"OUVERTURE_PAGE_CLOTURE":"OUVERTURE_PAGE_REJET",(isClose?"Page de clôture":"Page de rejet")+" ouverte",r.id);
+  let d;
+  try{ const x=await api("detail",{id:r.id}); d=norm(x.dossier); }catch(e){ if(e.code!=="SESSION"){ toast(e.error||"Erreur",true); location.hash="#/"; } return; }
+  if(d.st!=="En cours"){ m.innerHTML=`<div class="treat"><button class="back" id="bk">← Retour</button><div class="card"><div class="empty">Cette réclamation est « ${esc(d.st)} » : elle ne peut pas être ${isClose?"clôturée":"rejetée"} maintenant.</div></div></div>`; $("#bk").onclick=()=>{location.hash="#/";}; return; }
+  const min=10;
+  m.innerHTML=`<div class="treat"><button class="back" id="bk">← Retour au tableau de bord</button>
+    <section class="card"><div class="treat-head ${isClose?"close":"reject"}"><h1>${isClose?"Clôturer":"Rejeter"} la réclamation ${esc(d.id)}</h1><p>${isClose?"Décrivez comment la réclamation a été traitée et résolue.":"Expliquez pourquoi la réclamation est rejetée."}</p></div>
+    <div class="card-b"><div class="kv" style="margin-bottom:20px"><div><span>Matricule</span><b>${esc(d.mat)}</b></div><div><span>Département</span><b>${esc(d.dep)}</b></div><div><span>Catégorie</span><b>${esc(d.cat)} — ${esc(d.scat)}</b></div><div><span>Agent responsable</span><b>${esc(d.agent)}</b></div><div><span>Soumise le</span><b>${fdt(d.sub)}</b></div><div><span>Priorité</span><b>${esc(d.prio)}</b></div>
+      <div class="wide"><span>Description</span><div class="descbox">${d.desc?esc(d.desc):"—"}</div></div></div>
+      <label class="f" for="txt">${isClose?"Description du traitement et de la solution":"Motif du rejet"} <span style="color:var(--danger)">*</span></label>
+      <textarea class="input" id="txt" rows="7" maxlength="4000" placeholder="${isClose?"Ex. : Le problème a été signalé au responsable cantine, le menu a été modifié à partir de lundi…":"Ex. : La réclamation ne relève pas des RH / informations insuffisantes…"}"></textarea>
+      <div class="counter mono" id="cnt">0 / ${min} caractères minimum</div><p class="err" id="terr" role="alert"></p>
+      <div style="display:flex;gap:10px;margin-top:6px"><button class="btn ${isClose?"btn-ok":"btn-danger"}" id="sub" disabled style="${isClose?"":"background:var(--danger);color:#fff"}">${isClose?"Valider la clôture":"Valider le rejet"}</button><button class="btn btn-ghost" id="cn">Annuler</button></div>
+      <p class="note">Action définitive : l'heure exacte, votre matricule et ce texte seront enregistrés dans l'historique.</p></div></section></div>`;
+  const txt=$("#txt"), sub=$("#sub");
+  txt.addEventListener("input",()=>{ const n=txt.value.trim().length; $("#cnt").textContent=`${n} / ${min} caractères minimum`; sub.disabled=n<min; });
+  $("#bk").onclick=()=>{location.hash="#/";}; $("#cn").onclick=()=>{ track("ANNULATION",(isClose?"Clôture":"Rejet")+" annulé(e)",d.id); location.hash="#/"; };
+  sub.onclick=async ()=>{ sub.disabled=true; sub.textContent="Enregistrement…"; $("#terr").textContent="";
+    try{ await api(isClose?"close":"reject",{id:d.id,text:txt.value.trim()}); S.seq=-1; toast(`${d.id} : ${isClose?"clôturée":"rejetée"}.`); location.hash="#/"; poll(); }
+    catch(e){ $("#terr").textContent=e.error||"Échec."; sub.disabled=false; sub.textContent=isClose?"Valider la clôture":"Valider le rejet"; } };
+  txt.focus();
+}
+
+/* ---------- history (all reclamations) ---------- */
+const HCOLS=[["id","ID"],["sub","Soumise le"],["mat","Matricule"],["dep","Département"],["type","Type"],["shift","Shift"],["area","Area"],["subarea","Sub Area"],["qual","Qualification"],["zone","Zone"],["cat","Catégorie"],["scat","Sous-catégorie"],["inc","Incident"],["desc","Description"],["st","Statut"],["prio","Priorité"],["agent","Agent"],["taken","Prise en charge le"],["closed","Clôture / rejet le"],["closedBy","Clôturé par"],["text","Traitement / motif"],["mod","Dernière modif."]];
+const H={page:0,per:100,f:{q:"",st:"",prio:"",dep:"",agent:"",from:"",to:""}};
+async function loadAll(kind,onProg){
+  const all=[]; let off=0,total=Infinity;
+  while(off<total){ const r=await api(kind,{offset:off,limit:2000}); total=r.total; all.push(...r.items); off+=2000; onProg&&onProg(Math.min(all.length,total),total); if(!r.items.length) break; }
+  return all;
+}
+function showStale(){ const b=$("#stale"); if(b) b.classList.remove("hidden"); }
+async function renderHist(){
+  const m=$("#main");
+  m.innerHTML=`<div class="page-head"><div><h1>Historique</h1><p>Toutes les réclamations enregistrées dans la base de données, avec leur statut et leurs dates.</p></div><button class="btn btn-ghost" id="exp">Exporter en Excel (CSV)</button></div>
+    <section class="card"><div class="banner hidden" id="stale"><span>De nouvelles données sont disponibles.</span><button class="btn btn-sm btn-primary" id="rf">Actualiser</button></div>
+    <div class="progress"><i id="pg"></i></div>
+    <div class="filters"><input class="input grow" id="hq" placeholder="Rechercher (ID, matricule, texte…)" value="${esc(H.f.q)}">
+      <select class="input" id="hst"><option value="">Tous statuts</option>${[...STATUTS,"Historique"].map(s=>`<option ${H.f.st===s?"selected":""}>${s}</option>`).join("")}</select>
+      <select class="input" id="hpr"><option value="">Toutes priorités</option>${PRIOS.map(s=>`<option ${H.f.prio===s?"selected":""}>${s}</option>`).join("")}</select>
+      <select class="input" id="hdep"><option value="">Tous départements</option></select>
+      <select class="input" id="hag"><option value="">Tous agents</option>${S.agents.map(a=>`<option value="${esc(a.matricule)}" ${H.f.agent===a.matricule?"selected":""}>${esc(a.matricule)}</option>`).join("")}</select>
+      <label style="font-size:12px;color:var(--ink-soft)">du <input class="input" type="date" id="hfrom" value="${H.f.from}"></label><label style="font-size:12px;color:var(--ink-soft)">au <input class="input" type="date" id="hto" value="${H.f.to}"></label></div>
+    <div class="tbl-wrap" style="max-height:calc(100vh - 330px)"><table><thead><tr>${HCOLS.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody id="htb"><tr><td colspan="${HCOLS.length}" class="empty">Chargement de la base…</td></tr></tbody></table></div>
+    <div class="pager"><span id="hcount"></span><span><button class="btn btn-ghost btn-sm" id="hp">←</button> <span class="mono" id="hpg"></span> <button class="btn btn-ghost btn-sm" id="hn">→</button></span></div></section>`;
+  const rerender=()=>{ H.page=0; drawHist(); };
+  ["hq","hst","hpr","hdep","hag","hfrom","hto"].forEach(id=>$("#"+id).addEventListener("input",()=>{ H.f.q=$("#hq").value; H.f.st=$("#hst").value; H.f.prio=$("#hpr").value; H.f.dep=$("#hdep").value; H.f.agent=$("#hag").value; H.f.from=$("#hfrom").value; H.f.to=$("#hto").value; rerender(); }));
+  $("#hp").onclick=()=>{ if(H.page>0){H.page--;drawHist();} }; $("#hn").onclick=()=>{ H.page++; drawHist(); };
+  $("#htb").addEventListener("click",e=>{ const t=e.target.closest("[data-id]"); if(t) openDrawer(t.dataset.id); });
+  $("#rf").onclick=()=>{ S.histData=null; renderHist(); };
+  $("#exp").onclick=()=>{ if(!S.histData) return; track("EXPORT_HISTORIQUE","Export CSV de "+filteredHist().length+" lignes"); csv("Historique_Reclamations",HCOLS,filteredHist()); };
+  if(!S.histData){ try{ const rows=await loadAll("history",(a,b)=>{ const p=$("#pg"); if(p) p.style.width=(100*a/Math.max(1,b))+"%"; }); S.histData=rows.map(norm); }catch(e){ if(e.code!=="SESSION") $("#htb").innerHTML=`<tr><td colspan="${HCOLS.length}" class="empty">${esc(e.error||"Erreur de chargement")}</td></tr>`; return; } }
+  const p=$("#pg"); if(p) p.style.width="100%";
+  const deps=[...new Set(S.histData.map(r=>r.dep).filter(Boolean))].sort(); const sel=$("#hdep"); if(sel) sel.innerHTML=`<option value="">Tous départements</option>`+deps.map(x=>`<option ${H.f.dep===x?"selected":""}>${esc(x)}</option>`).join("");
+  drawHist();
+}
+function filteredHist(){
+  const f=H.f, q=f.q.trim().toLowerCase();
+  return (S.histData||[]).filter(r=>(!f.st||r.st===f.st)&&(!f.prio||r.prio===f.prio)&&(!f.dep||r.dep===f.dep)&&(!f.agent||r.agent===f.agent)&&(!f.from||r.sub.slice(0,10)>=f.from)&&(!f.to||r.sub.slice(0,10)<=f.to)
+    &&(!q||Object.values(r).join(" ").toLowerCase().includes(q)));
+}
+function drawHist(){
+  if(!$("#htb")||!S.histData) return;
+  const rows=filteredHist(), pages=Math.max(1,Math.ceil(rows.length/H.per)); H.page=Math.min(H.page,pages-1);
+  const slice=rows.slice(H.page*H.per,(H.page+1)*H.per);
+  $("#htb").innerHTML=slice.length? slice.map(r=>`<tr data-id="${r.id}"><td class="id">${r.id}</td><td class="nowrap mono">${fdt(r.sub)}</td><td class="mono">${esc(r.mat)}</td><td>${esc(r.dep)}</td><td>${esc(r.type)}</td><td>${esc(r.shift)}</td><td>${esc(r.area)}</td><td>${esc(r.subarea)}</td><td>${esc(r.qual)}</td><td>${esc(r.zone)}</td><td>${esc(r.cat)}</td><td>${esc(r.scat)}</td><td class="nowrap mono">${fdt(r.inc)}</td><td><div class="desc-cell" title="${esc(r.desc)}">${esc(r.desc)}</div></td><td>${badge(r.st)}</td><td>${prio(r.prio)}</td><td class="mono">${esc(r.agent)}</td><td class="nowrap mono">${fdt(r.taken)}</td><td class="nowrap mono">${fdt(r.closed)}</td><td class="mono">${esc(r.closedBy)}</td><td><div class="desc-cell" title="${esc(r.text)}">${esc(r.text)}</div></td><td class="nowrap mono">${fdt(r.mod)}</td></tr>`).join("")
+    : `<tr><td colspan="${HCOLS.length}" class="empty">Aucun résultat.</td></tr>`;
+  $("#hcount").textContent=`${rows.length.toLocaleString("fr-FR")} réclamation(s) affichée(s) sur ${S.histData.length.toLocaleString("fr-FR")} dans la base`;
+  $("#hpg").textContent=`${H.page+1} / ${pages}`; $("#hp").disabled=H.page===0; $("#hn").disabled=H.page>=pages-1;
+}
+
+/* ---------- activity journal (every click) ---------- */
+const JCOLS=[["t","Date et heure (Tunis)"],["agent","Agent"],["action","Action"],["id","Réclamation"],["detail","Détail"],["old","Avant"],["neu","Après"],["comment","Commentaire"]];
+const J={page:0,per:100,q:"",action:""};
+async function renderJour(){
+  const m=$("#main");
+  m.innerHTML=`<div class="page-head"><div><h1>Journal d'activité</h1><p>Chaque action (connexion, ouverture, changement de statut, clôture, rejet…) avec son heure exacte.</p></div><button class="btn btn-ghost" id="exp">Exporter en Excel (CSV)</button></div>
+    <section class="card"><div class="banner hidden" id="stale"><span>De nouvelles données sont disponibles.</span><button class="btn btn-sm btn-primary" id="rf">Actualiser</button></div><div class="progress"><i id="pg"></i></div>
+    <div class="filters"><input class="input grow" id="jq" placeholder="Rechercher (ID REC-…, matricule, texte…)" value="${esc(J.q)}"><select class="input" id="jac"><option value="">Toutes actions</option></select></div>
+    <div class="tbl-wrap" style="max-height:calc(100vh - 330px)"><table><thead><tr>${JCOLS.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead><tbody id="jtb"><tr><td colspan="${JCOLS.length}" class="empty">Chargement du journal…</td></tr></tbody></table></div>
+    <div class="pager"><span id="jcount"></span><span><button class="btn btn-ghost btn-sm" id="jp">←</button> <span class="mono" id="jpg"></span> <button class="btn btn-ghost btn-sm" id="jn">→</button></span></div></section>`;
+  $("#jq").oninput=e=>{ J.q=e.target.value; J.page=0; drawJour(); }; $("#jac").onchange=e=>{ J.action=e.target.value; J.page=0; drawJour(); };
+  $("#jp").onclick=()=>{ if(J.page>0){J.page--;drawJour();} }; $("#jn").onclick=()=>{ J.page++; drawJour(); };
+  $("#rf").onclick=()=>{ S.jourData=null; renderJour(); };
+  $("#jtb").addEventListener("click",e=>{ const t=e.target.closest("[data-id]"); if(t&&t.dataset.id) openDrawer(t.dataset.id); });
+  $("#exp").onclick=()=>{ if(!S.jourData) return; track("EXPORT_JOURNAL","Export CSV du journal"); csv("Journal_Activite",JCOLS,filteredJour()); };
+  if(!S.jourData){ try{ S.jourData=await loadAll("journal",(a,b)=>{ const p=$("#pg"); if(p) p.style.width=(100*a/Math.max(1,b))+"%"; }); }catch(e){ if(e.code!=="SESSION") $("#jtb").innerHTML=`<tr><td colspan="${JCOLS.length}" class="empty">${esc(e.error||"Erreur")}</td></tr>`; return; } }
+  const acts=[...new Set(S.jourData.map(r=>r.action))].sort(); const s=$("#jac"); if(s) s.innerHTML=`<option value="">Toutes actions</option>`+acts.map(a=>`<option value="${a}" ${J.action===a?"selected":""}>${esc(label(a))}</option>`).join("");
+  drawJour();
+}
+function filteredJour(){ const q=J.q.trim().toLowerCase(); return (S.jourData||[]).filter(r=>(!J.action||r.action===J.action)&&(!q||Object.values(r).join(" ").toLowerCase().includes(q))); }
+function drawJour(){
+  if(!$("#jtb")||!S.jourData) return;
+  const rows=filteredJour(), pages=Math.max(1,Math.ceil(rows.length/J.per)); J.page=Math.min(J.page,pages-1);
+  const sl=rows.slice(J.page*J.per,(J.page+1)*J.per);
+  $("#jtb").innerHTML=sl.length? sl.map(r=>`<tr ${r.id?`data-id="${r.id}"`:'style="cursor:default"'}><td class="nowrap mono">${fdt(r.t)}</td><td class="mono">${esc(r.agent)}</td><td><b>${esc(label(r.action))}</b></td><td class="id">${esc(r.id)}</td><td>${esc(r.detail)}</td><td>${esc(r.old)}</td><td>${esc(r.neu)}</td><td><div class="desc-cell" title="${esc(r.comment)}">${esc(r.comment)}</div></td></tr>`).join("")
+    : `<tr><td colspan="${JCOLS.length}" class="empty">Aucune entrée.</td></tr>`;
+  $("#jcount").textContent=`${rows.length.toLocaleString("fr-FR")} entrée(s) sur ${S.jourData.length.toLocaleString("fr-FR")}`;
+  $("#jpg").textContent=`${J.page+1} / ${pages}`; $("#jp").disabled=J.page===0; $("#jn").disabled=J.page>=pages-1;
+}
+function csv(name,cols,rows){
+  const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  const text="\ufeff"+cols.map(c=>q(c[1])).join(";")+"\r\n"+rows.map(r=>cols.map(c=>q(r[c[0]])).join(";")).join("\r\n");
+  const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([text],{type:"text/csv;charset=utf-8"}));
+  a.download=`${name}_${new Date().toISOString().slice(0,10)}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+/* ---------- boot ---------- */
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && S.drawerId) closeDrawer(); });
+if(loadSession()) enterApp(); else showLogin("");
+})();
+</script>
+</body>
+</html>
